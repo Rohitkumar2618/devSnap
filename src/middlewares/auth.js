@@ -9,7 +9,7 @@ try{
         throw new Error("Token is not valid")
       }
 
-    const decodeObj = await jwt.verify(token, "DEv$dfmkl");
+    const decodeObj = await jwt.verify(token, "DEv@tinder");
 
     const {_id} = decodeObj;
  

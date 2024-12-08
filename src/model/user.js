@@ -44,17 +44,27 @@ const userSchema = new mongoose.Schema(
     about: {
       type: String,
       default: "No about information provided", 
+    },
+    gender:{
+      type: String,
+      enum: ['male', 'female', 'other'], // **Gender validation**
+        message: `"{VALUE}" is an incorrect status type`
     }
+    
 
   },
   {
     timestamps: true, // **Automatically adds createdAt and updatedAt fields to the schema**
   }
+
+
 );
+
+userSchema.index({firstName:1, lastName:1});
 
 userSchema.methods.getJWT = async function () {
   const user = this;
-  const token = await jwt.sign({ _id: user.id }, "DEv$dfmkl", { expiresIn: '1h' }); // **JWT signing logic**
+  const token = await jwt.sign({ _id: user.id }, "DEv@tinder", { expiresIn: '1h' }); // **JWT signing logic**
   return token; // **Return the generated token**
 };
 

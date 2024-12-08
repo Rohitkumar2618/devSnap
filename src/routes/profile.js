@@ -15,7 +15,7 @@ profileRouter.post('/profile/view', userAuth, async (req, res) => {
       }
       res.send(user);
     } catch (err) {
-      res.status(500).json({ error: `ERROR: ${err.message}` });
+      res.status(400).json({ error: `ERROR: ${err.message}` });
     }
   });
 
