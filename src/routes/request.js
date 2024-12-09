@@ -122,5 +122,134 @@ requestRouter.post('/request/send/:status/:toUserId',
     }
 });
 
+
+// requestRouter.post('/request/review/:status/:requestId',
+//     userAuth,
+//      async(req,res)=>{
+//      try{
+
+//         const loggedInUser = req.users;6 
+//         const {status, requestId} = req.params;
+
+//         const allowedStatus = ["accepted", "rejected"];
+
+//         if(!allowedStatus.includes(status)){
+//             return res.status(400)
+//            .json({ error: "Invalid status type" });
+//         }
+
+//         const connectionRequest = await ConnectionRequest.findOne({
+//             _id: requestId,
+//             toUserId: loggedInUser._id,
+//             status:"interested",
+//         })
+
+
+//         if(!connectionRequest){
+//             return res.status(404)
+//            .json({ error: "No such connection request found." });
+
+//         }
+
+
+
+//         connectionRequest.status = status;
+
+//         const data = await connectionRequest.save();
+
+//         res.json({message:"Connection request "+ status, data
+//         })
+
+//      }catch(err){
+
+//      }
+// })
+
+
+// requestRouter.post('/request/review/:status/:requestId', userAuth, async (req, res) => {
+//     try {
+//         const loggedInUser = req.user; 
+//         const { status, requestId } = req.params;
+
+//         const allowedStatus = ["accepted", "rejected"];
+
+//         // Validate the status
+//         if (!allowedStatus.includes(status)) {
+//             return res.status(400).json({ error: "Invalid status type" });
+//         }
+
+//         // Fetch the connection request
+//         const connectionRequest = await ConnectionRequest.findOne({
+//             _id: requestId,
+//             toUserId: loggedInUser._id,
+//             status: "interested",
+//         });
+
+//         // Check if the connection request exists
+//         if (!connectionRequest) {
+//             return res.status(404)
+//             .json({ error: "Connection Request not found." });
+//         }
+
+//         // Update the status of the connection request
+//         connectionRequest.status = status;
+
+//         // Save the updated request
+//         const data = await connectionRequest.save();
+
+//         res.json({
+//             message: `Connection request ${status} successfully.`,
+//             data,
+//         });
+//     } catch (err) {
+//         // Handle errors
+//         console.error("Error processing connection request:", err);
+//         res.status(500).json({ error: "An internal server error occurred." });
+//     }
+// });
+
+
+requestRouter.post('/request/review/:status/:requestId', userAuth, async (req, res) => {
+    try {
+        const loggedInUser = req.user; // Ensure the logged-in user is correctly fetched
+        const { status, requestId } = req.params;
+
+        const allowedStatus = ["accepted", "rejected"];
+
+        // Validate the status
+        if (!allowedStatus.includes(status)) {
+            return res.status(400).json({ error: "Invalid status type" });
+        }
+
+        // Fetch the connection request
+        const connectionRequest = await ConnectionRequest.findOne({
+            _id: requestId, 
+            toUserId: loggedInUser._id, // Ensure logged-in user matches toUserId
+            status: "interested",
+        });
+
+        // Check if the connection request exists
+        if (!connectionRequest) {
+            return res.status(404).json({ error: "Connection Request not found." });
+        }
+
+        // Update the status of the connection request
+        connectionRequest.status = status;
+
+        // Save the updated request
+        const data = await connectionRequest.save();
+
+        res.json({
+            message: `Connection request ${status} successfully.`,
+            data,
+        });
+    } catch (err) {
+        // Handle errors
+        console.error("Error processing connection request:", err);
+        res.status(500).json({ error: "An internal server error occurred." });
+    }
+});
+
+
 module.exports = requestRouter;
  
